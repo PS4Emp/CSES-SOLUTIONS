@@ -1,55 +1,32 @@
- #include<bits/stdc++.h>
-#define ll long long
-#define pb push_back
-#define fr(a,b) for(int i = a; i < b; i++)
-#define rep(i,a,b) for(int i = a; i < b; i++)
-#define mod 1000000007
-#define inf (1LL<<60)
-#define all(x) (x).begin(), (x).end()
-#define prDouble(x) cout << fixed << setprecision(10) << x
-#define triplet pair<ll,pair<ll,ll>>
-#define fast_io ios_base::sync_with_stdio(false);cin.tie(NULL)
-using namespace std;
- 
- 
-int main() {
-   fast_io;
-   ll t,n,m,x,i,j,k,q;
-   //cin >> t;
-   t = 1;
-   while(t--)
-   {
-        cin >> n;
-        bool grid[n+1][n+1];
- 
-        //Input, hai na cool xD
- 
-        rep(i,1,n+1)rep(j,1,n+1){
-            char ch;cin >> ch;
-            if(ch == '.')grid[i][j] = 0;
-            else grid[i][j] = 1;
-        }
- 
-        int dp[n+1][n+1];
-        for(int i = n; i >= 1; i--)
-        {
-            for(int j = n; j >= 1; j--)
-            {
-                if(i == n && j == n)
-                    dp[i][j] = 1;
-                else
-                {
-                    int op1 = (j == n) ? 0 : dp[i][j+1];
-                    int op2 = (i == n) ? 0 : dp[i+1][j];
-                    dp[i][j] = (op1 + op2) % mod;
-                    if(grid[i][j])
-                        dp[i][j] = 0;
-                }
-            }
-        }
-        if(grid[n][n])
-            cout << 0;
-        else cout << dp[1][1];
-   }
-   return 0;
-}
+def count_paths(description):
+    # Initialize a 2D array to store the number of paths
+    dp = [[0] * 7 for _ in range(7)]
+    dp[0][0] = 1  # Starting point
+
+    for char in description:
+        new_dp = [[0] * 7 for _ in range(7)]
+
+        for i in range(7):
+            for j in range(7):
+                if char == 'R' or char == '?':
+                    if j + 1 < 7:
+                        new_dp[i][j + 1] += dp[i][j]
+                if char == 'L' or char == '?':
+                    if j - 1 >= 0:
+                        new_dp[i][j - 1] += dp[i][j]
+                if char == 'D' or char == '?':
+                    if i + 1 < 7:
+                        new_dp[i + 1][j] += dp[i][j]
+                if char == 'U' or char == '?':
+                    if i - 1 >= 0:
+                        new_dp[i - 1][j] += dp[i][j]
+                        
+        dp = new_dp  # Update dp array for next character
+    
+    return dp[6][0]  # Return the number of paths reaching the lower-left square
+
+# Input
+description = input()
+
+# Output
+print(count_paths(description))
