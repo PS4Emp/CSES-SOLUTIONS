@@ -6,6 +6,7 @@ public:
         
         if (m == 0) return 0; // Empty needle case
         
+        
         for (int i = 0; i <= n - m; ++i) {
             int j;
             for (j = 0; j < m; ++j) {
