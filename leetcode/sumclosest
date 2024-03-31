@@ -1,0 +1,25 @@
+int threeSumClosest(std::vector<int>& nums, int target) {
+    std::sort(nums.begin(), nums.end());
+    int closestSum = INT_MAX; // Initialize closestSum with maximum integer value
+    
+    for (int i = 0; i < nums.size() - 2; ++i) {
+        int left = i + 1, right = nums.size() - 1;
+        
+        while (left < right) {
+            int currSum = nums[i] + nums[left] + nums[right];
+            
+            if (currSum == target) // If the sum equals the target, return it immediately
+                return currSum;
+            
+            if (std::abs(currSum - target) < std::abs(closestSum - target)) // Update closestSum if needed
+                closestSum = currSum;
+            
+            if (currSum < target) // Move left pointer if the sum is less than target
+                left++;
+            else // Move right pointer if the sum is greater than target
+                right--;
+        }
+    }
+    
+    return closestSum;
+}
