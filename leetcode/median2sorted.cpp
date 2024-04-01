@@ -4,7 +4,7 @@ public:
         int m = nums1.size();
         int n = nums2.size();
         
-        // Ensure nums1 is smaller or equal in size to nums2
+        
         if (m > n) {
             nums1.swap(nums2);
             swap(m, n);
@@ -35,9 +35,7 @@ public:
             }
         }
 
-        // If the input arrays are not sorted, or if there are missing elements
-        // in the arrays, an exception can be thrown, or you may return a default value.
-        // Here, we return 0.0 as an indication of failure.
+        
         return 0.0;
     }
 };
