@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+       int n = s.size();
+       int maxLength = 0;
+       std::vector<int> charCount(26, 0);
+
+       int left = 0; 
+       int maxFreqInWindow = 0;
+
+       for(int right = 0; right < n; ++right){
+        charCount[s[right] - 'A']++;
+        maxFreqInWindow = std::max(maxFreqInWindow, charCount[s[right] - 'A']);
+
+        while(right - left + 1 - maxFreqInWindow > k ){
+            charCount[s[left] - 'A']--;
+            left++;
+        }
+        maxLength = std::max(maxLength, right-left+1);
+       } 
+       return maxLength;
+    }
+};
