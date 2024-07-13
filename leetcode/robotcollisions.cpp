@@ -8,38 +8,42 @@ public:
         }
         sort(robots.begin(), robots.end());
         
-        vector<pair<int, int>> stack;
-        for (const auto& robot : robots) {
-            int health = robot[1];
-            int direction = robot[2];
-            int index = robot[3];
+        vector<int> stack;
+        vector<int> result(n);
+        
+        for (int i = 0; i < n; ++i) {
+            int direction = robots[i][2];
+            int index = robots[i][3];
             
             if (direction == 1) {  
-                stack.push_back({health, index});
+                stack.push_back(i);
             } else {  
-                while (!stack.empty() && stack.back().first < health) {
+                while (!stack.empty() && healths[robots[stack.back()][3]] < healths[index]) {
+                    healths[index]--;
+                    healths[robots[stack.back()][3]] = 0;
                     stack.pop_back();
-                    health--;
                 }
                 
                 if (!stack.empty()) {
-                    if (stack.back().first > health) {
-                        stack.back().first--;
+                    if (healths[robots[stack.back()][3]] > healths[index]) {
+                        healths[robots[stack.back()][3]]--;
+                        healths[index] = 0;
                     } else {  
+                        healths[robots[stack.back()][3]] = 0;
+                        healths[index] = 0;
                         stack.pop_back();
                     }
-                } else {
-                    stack.push_back({health, index});
                 }
             }
         }
         
-        vector<int> result(n, 0);
-        for (const auto& [health, index] : stack) {
-            result[index] = health;
+        vector<int> survived;
+        for (int i = 0; i < n; ++i) {
+            if (healths[i] > 0) {
+                survived.push_back(healths[i]);
+            }
         }
         
-        result.erase(remove(result.begin(), result.end(), 0), result.end());
-        return result;
+        return survived;
     }
 };
