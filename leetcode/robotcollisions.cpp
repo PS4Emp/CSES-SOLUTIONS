@@ -2,39 +2,44 @@ class Solution {
 public:
     vector<int> survivedRobotsHealths(vector<int>& positions, vector<int>& healths, string directions) {
         int n = positions.size();
-        vector<pair<int, int>> robots;
+        vector<array<int, 4>> robots;
         for (int i = 0; i < n; ++i) {
-            robots.push_back({positions[i], i});
+            robots.push_back({positions[i], healths[i], directions[i] == 'R' ? 1 : 0, i});
         }
         sort(robots.begin(), robots.end());
         
-        stack<int> s;
-        for (int i = 0; i < n; ++i) {
-            int index = robots[i].second;
-            if (directions[index] == 'R') {
-                s.push(index);
-            } else {
-                while (!s.empty() && healths[s.top()] < healths[index]) {
-                    healths[s.top()] = 0;
-                    s.pop();
+        vector<pair<int, int>> stack;
+        for (const auto& robot : robots) {
+            int health = robot[1];
+            int direction = robot[2];
+            int index = robot[3];
+            
+            if (direction == 1) {  
+                stack.push_back({health, index});
+            } else {  
+                while (!stack.empty() && stack.back().first < health) {
+                    stack.pop_back();
+                    health--;
                 }
-                if (!s.empty() && healths[s.top()] == healths[index]) {
-                    healths[s.top()] = 0;
-                    healths[index] = 0;
-                    s.pop();
-                } else if (!s.empty()) {
-                    healths[s.top()]--;
-                    healths[index] = 0;
+                
+                if (!stack.empty()) {
+                    if (stack.back().first > health) {
+                        stack.back().first--;
+                    } else {  
+                        stack.pop_back();
+                    }
+                } else {
+                    stack.push_back({health, index});
                 }
             }
         }
-
-        vector<int> result;
-        for (int i = 0; i < n; ++i) {
-            if (healths[i] > 0) {
-                result.push_back(healths[i]);
-            }
+        
+        vector<int> result(n, 0);
+        for (const auto& [health, index] : stack) {
+            result[index] = health;
         }
+        
+        result.erase(remove(result.begin(), result.end(), 0), result.end());
         return result;
     }
 };
